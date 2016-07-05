@@ -1,0 +1,1 @@
+{{ letsencrypt_path }}/certbot-auto certonly --standalone --noninteractive --text --agree-tos --email {{ letsencrypt_email }} --domains {{ letsencrypt_domains | join(',') }} {%- if letsencrypt_staging %} --staging{% endif -%}

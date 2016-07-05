@@ -1,0 +1,24 @@
+---
+- name: install certbot
+  become: yes
+  get_url:
+    url: https://dl.eff.org/certbot-auto
+    dest: "{{ letsencrypt_path }}/certbot-auto"
+    mode: 0777
+
+- name: generate letsencrypt certificates
+  become: yes
+  shell: "{{ lookup('template', '../templates/certbot_certonly') }}"
+  args:
+    creates: /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}
+  when: "{{ letsencrypt_domains | length > 0 }}"
+  ignore_errors: yes
+
+- name: set up automatic renewal
+  become: yes
+  cron:
+    name: "Letsencrypt renewal"
+    job: "{{ letsencrypt_path }}/certbot-auto renew --quiet --no-self-upgrade"
+    state: "{{ letsencrypt_renew | ternary('present', 'absent') }}"
+    minute: "{{ 59 | random }}"
+    hour: "{{ 11 | random }}/12"

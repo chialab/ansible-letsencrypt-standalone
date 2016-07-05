@@ -1,0 +1,7 @@
+---
+letsencrypt_path: "/usr/local/bin"
+letsencrypt_staging: no
+letsencrypt_renew: yes
+
+letsencrypt_email: "webmaster@{{ ansible_fqdn }}"
+letsencrypt_domains: []
